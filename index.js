@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
-
+morgan.token('postBody', (req, res) => { return `${JSON.stringify(req.body)}` })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postBody'))
 let persons = [
     {
         "name": "Arto Hellas",
@@ -53,7 +55,6 @@ const getInfo = () => {
 }
 
 app.get('/info', (req, res) => {
-    const len = persons.length
     res.send(getInfo())
 })
 
@@ -69,6 +70,7 @@ const getRandomID = () => {
 }
 
 app.post('/api/persons', (req, res) => {
+    console.log(req)
     const body = req.body
 
     if(!body.name || !body.number){
@@ -91,6 +93,12 @@ app.post('/api/persons', (req, res) => {
 
     res.json(person)
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint '})
+}
+
+app.use(unknownEndpoint)
 
 const port = 3000
 app.listen(port, () => {
