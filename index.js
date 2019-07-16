@@ -4,6 +4,8 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors');
+const db = require('./queries');
+
 app.use(cors())
 app.use(bodyParser.json())
 morgan.token('postBody', (req, res) => { return `${JSON.stringify(req.body)}` })
@@ -37,15 +39,11 @@ app.get('/', (req, res) => {
     res.send('<h1>MAIN PAGE</h1>')
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons)
-})
-
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(per => per.id === id)
-    person ? res.json(person) : res.status(404).end()
-})
+app.get('/api/persons', db.getPeople)
+app.get('/api/persons/:id', db.getPersonById)
+app.post('/api/persons', db.createPerson)
+app.put('/api/persons/:id', db.updatePerson)
+app.delete('/api/persons/:id', db.deletePerson)
 
 const getInfo = () => {
     return(
@@ -62,12 +60,14 @@ app.get('/info', (req, res) => {
     res.send(getInfo())
 })
 
+/*
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(per => per.id !== id)
 
     res.status(204).end()
 })
+
 
 const getRandomID = () => {
     return Math.floor((Math.random() * 1000000) + 1)
@@ -96,6 +96,7 @@ app.post('/api/persons', (req, res) => {
     
     res.json(person)
 })
+*/
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint '})
