@@ -1,3 +1,4 @@
+//DEPLOYED TO HEROKU: https://gentle-mesa-71363.herokuapp.com/
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -104,5 +105,5 @@ app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`server running on port ${port}`)
+  console.log(`Server running on port ${PORT}`)
 })
