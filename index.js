@@ -2,10 +2,20 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-
+const io = require("socket.io")(80);
+const cors = require('cors');
+app.use(cors())
 app.use(bodyParser.json())
 morgan.token('postBody', (req, res) => { return `${JSON.stringify(req.body)}` })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postBody'))
+
+io.on('connection', (socket) => {
+    console.log("made socket connection")
+    socket.on('new-person', (data) => {
+        console.log(data)
+    })
+})
+
 let persons = [
     {
         "name": "Arto Hellas",
@@ -70,7 +80,6 @@ const getRandomID = () => {
 }
 
 app.post('/api/persons', (req, res) => {
-    console.log(req)
     const body = req.body
 
     if(!body.name || !body.number){
@@ -90,7 +99,7 @@ app.post('/api/persons', (req, res) => {
     }
 
     persons = persons.concat(person)
-
+    
     res.json(person)
 })
 
@@ -100,7 +109,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const port = 3000
+const port = 3001
 app.listen(port, () => {
     console.log(`server running on port ${port}`)
 })
