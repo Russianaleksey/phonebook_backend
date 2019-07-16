@@ -2,19 +2,12 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-const io = require("socket.io")(80);
 const cors = require('cors');
 app.use(cors())
 app.use(bodyParser.json())
 morgan.token('postBody', (req, res) => { return `${JSON.stringify(req.body)}` })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postBody'))
 
-io.on('connection', (socket) => {
-    console.log("made socket connection")
-    socket.on('new-person', (data) => {
-        console.log(data)
-    })
-})
 
 let persons = [
     {
