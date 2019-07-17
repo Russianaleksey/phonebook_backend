@@ -42,7 +42,7 @@ const createPerson = (req, res) => {
         if(error){
             throw error
         }
-
+        console.log(res)
         res.status(201).send(`User added with ID: ${results.insertId}`)
     })
 }
@@ -58,7 +58,7 @@ const updatePerson = (req, res) => {
             if(error){
                 throw error
             }
-            res.status(200).send(`User modified with ID: ${id}`)
+            res.status(200)
         }
     )
 }
