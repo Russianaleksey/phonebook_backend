@@ -43,7 +43,7 @@ const createPerson = (req, res) => {
             throw error
         }
         console.log(res)
-        res.status(201).send(`User added with ID: ${results.insertId}`)
+        res.status(201).json(req.body)
     })
 }
 
