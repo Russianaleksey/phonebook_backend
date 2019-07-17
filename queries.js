@@ -27,7 +27,7 @@ const getPeople = (req, res) => {
 const getPersonById = (req, res) => {
     const id = parseInt(req.params.id)
 
-    pool.query(`SELECT * FROM people WHERE id = ${id}`, (error, results) => {
+    pool.query('SELECT * FROM people WHERE id = $1', [id],(error, results) => {
         if(error){
             throw error
         }
@@ -38,7 +38,7 @@ const getPersonById = (req, res) => {
 const createPerson = (req, res) => {
     const { name, number } = req.body
 
-    pool.query(`INSERT INTO people (name, number) VALUES ${name, number}`, (error, results) => {
+    pool.query('INSERT INTO people (name, number) VALUES ($1, $2)', [name, number],(error, results) => {
         if(error){
             throw error
         }
@@ -52,7 +52,8 @@ const updatePerson = (req, res) => {
     const { name, number } = req.body
 
     pool.query(
-        `UPDATE people SET name = ${name}, number = ${number} WHERE id= ${id}`,
+        'UPDATE people SET name = $1, number = $2 WHERE id= $3',
+        [name, number, id],
         (error, results) => {
             if(error){
                 throw error
@@ -65,7 +66,7 @@ const updatePerson = (req, res) => {
 const deletePerson = (req, res) => {
     const id = parseInt(req.params.id)
 
-    pool.query(`DELETE FROM people WHERE id = ${id}`, (error, results) => {
+    pool.query('DELETE FROM people WHERE id = $1', [id],(error, results) => {
         if(error){
             throw error
         }
